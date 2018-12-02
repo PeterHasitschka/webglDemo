@@ -47824,31 +47824,58 @@ document.addEventListener("DOMContentLoaded", function (event) {
   taskList.add("Init Scene (Camera & Renderer)", function (scene) {
     scene.threeScene = new three__WEBPACK_IMPORTED_MODULE_2__["Scene"]();
     scene.camera = new three__WEBPACK_IMPORTED_MODULE_2__["PerspectiveCamera"](75, //Camera frustum vertical field of view.
-    window.innerWidth / window.innerHeight, //Camera frustum aspect ratio.
+    scene.container.offsetWidth / scene.container.offsetHeight, //Camera frustum aspect ratio.
     0.1, // Camera frustum near plane.
     1000 // Camera frustum far plane.
     );
-    scene.camera.position.z = 100;
+    scene.camera.position.z = 10;
     scene.renderer = new three__WEBPACK_IMPORTED_MODULE_2__["WebGLRenderer"]();
     scene.renderer.setSize(window.innerWidth, window.innerHeight);
     scene.container.appendChild(scene.renderer.domElement);
   });
-  taskList.add("Add Light", function (scene) {
-    var light = new three__WEBPACK_IMPORTED_MODULE_2__["PointLight"](0xffff00);
-    light.position.set(10, 0, 25);
-    scene.threeScene.add(light);
+  /*
+  *******************
+    Add ambient Light
+  *******************
+  */
+
+  taskList.add("Add ambient light", function (scene) {
+    var light = new three__WEBPACK_IMPORTED_MODULE_2__["AmbientLight"](0x404040);
+    scene.add(light, "ambientlight");
   });
   /*
-    Add first geometry
+  *******************
+    Add Geometry
+  *******************
    */
 
   taskList.add("Add Geometry", function (scene) {
-    var geometry = new three__WEBPACK_IMPORTED_MODULE_2__["BoxGeometry"](20, 20, 20);
-    var material = new three__WEBPACK_IMPORTED_MODULE_2__["MeshLambertMaterial"]({
-      color: 0xfd59d7
+    var geometry = new three__WEBPACK_IMPORTED_MODULE_2__["SphereGeometry"](5, 32, 32);
+    var material = new three__WEBPACK_IMPORTED_MODULE_2__["MeshPhongMaterial"]({
+      color: 0x00bbff
     });
-    var cube = new three__WEBPACK_IMPORTED_MODULE_2__["Mesh"](geometry, material);
-    scene.threeScene.add(cube);
+    var sphere = new three__WEBPACK_IMPORTED_MODULE_2__["Mesh"](geometry, material);
+    scene.add(sphere, "sphere");
+  });
+  /*
+  *******************
+    Add Point Light
+  *******************
+  */
+
+  taskList.add("Add Point Light", function (scene) {
+    var light = new three__WEBPACK_IMPORTED_MODULE_2__["PointLight"](0xffff00);
+    light.position.set(10, 0, 25);
+    scene.add(light, "pointlight");
+  });
+  /*
+  *******************
+    Remove ambient light
+  *******************
+  */
+
+  taskList.add("Remove ambient light", function (scene) {
+    scene.removeByName("ambientlight");
   });
 });
 
@@ -47875,9 +47902,11 @@ function () {
   function Scene() {
     _classCallCheck(this, Scene);
 
+    this.elementList = [];
     /**
      * @var HTMLElement
      */
+
     this.container = null;
     /**
      * @var THREE.Scene
@@ -47902,6 +47931,30 @@ function () {
     key: "render",
     value: function render() {
       this.renderer.render(this.threeScene, this.camera);
+    }
+  }, {
+    key: "add",
+    value: function add(element) {
+      var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      element.name = name;
+      this.threeScene.add(element);
+      console.log(element);
+    }
+  }, {
+    key: "remove",
+    value: function remove(element) {
+      this.threeScene.remove(element);
+    }
+  }, {
+    key: "removeByName",
+    value: function removeByName(name) {
+      var elm = this.threeScene.getObjectByName(name, true);
+      if (elm) this.threeScene.remove(elm);
+    }
+  }, {
+    key: "getObjectByName",
+    value: function getObjectByName(name) {
+      return this.threeScene.getObjectByName(name, true);
     }
   }]);
 

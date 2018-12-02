@@ -1,5 +1,7 @@
 class Scene {
   constructor() {
+    this.elementList = [];
+
     /**
      * @var HTMLElement
      */
@@ -27,6 +29,25 @@ class Scene {
 
   render() {
     this.renderer.render(this.threeScene, this.camera);
+  }
+
+  add(element, name = null) {
+    element.name = name;
+    this.threeScene.add(element);
+    console.log(element);
+  }
+
+  remove(element) {
+    this.threeScene.remove(element);
+  }
+
+  removeByName(name) {
+    let elm = this.threeScene.getObjectByName(name, true);
+    if (elm) this.threeScene.remove(elm);
+  }
+
+  getObjectByName(name) {
+    return this.threeScene.getObjectByName(name, true);
   }
 }
 
