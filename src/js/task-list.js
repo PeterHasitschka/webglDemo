@@ -13,10 +13,10 @@ class TaskList {
     this.containerElement = containerElement;
   }
 
-  add(fct, title) {
+  add(title, fct) {
     this.list.push(new Task(fct, this.scene));
     let listElm = document.createElement("div");
-    listElm.innerHTML = "title";
+    listElm.innerHTML = title;
     listElm.classList.add("task");
     listElm.setAttribute("data-iterator", this.list.length - 1);
     this.containerElement.appendChild(listElm);
@@ -32,7 +32,6 @@ class TaskList {
       let taskElm = document.querySelectorAll(
         '.task[data-iterator="' + this.iterator + '"]'
       )[0];
-      console.log(taskElm);
       Array.from(document.getElementsByClassName("task")).forEach(elm => {
         elm.classList.remove("active");
       });

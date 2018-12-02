@@ -47805,17 +47805,50 @@ function LensFlare() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scene__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scene */ "./src/js/scene.js");
 /* harmony import */ var _task_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./task-list */ "./src/js/task-list.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
   var myScene = new _scene__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  myScene.initScene();
   var taskList = new _task_list__WEBPACK_IMPORTED_MODULE_1__["default"](myScene, document.getElementsByClassName("control-container-list")[0]);
-  taskList.add(function (scene) {
-    console.log("I'm a task", scene);
-  }, "Demo Task");
   document.getElementsByClassName("next-task-button")[0].addEventListener("click", function () {
     taskList.runNext();
+  });
+  /*
+  *******************
+    Initialize Scene
+  *******************
+  */
+
+  taskList.add("Init Scene (Camera & Renderer)", function (scene) {
+    scene.threeScene = new three__WEBPACK_IMPORTED_MODULE_2__["Scene"]();
+    scene.camera = new three__WEBPACK_IMPORTED_MODULE_2__["PerspectiveCamera"](75, //Camera frustum vertical field of view.
+    window.innerWidth / window.innerHeight, //Camera frustum aspect ratio.
+    0.1, // Camera frustum near plane.
+    1000 // Camera frustum far plane.
+    );
+    scene.camera.position.z = 100;
+    scene.renderer = new three__WEBPACK_IMPORTED_MODULE_2__["WebGLRenderer"]();
+    scene.renderer.setSize(window.innerWidth, window.innerHeight);
+    scene.container.appendChild(scene.renderer.domElement);
+  });
+  taskList.add("Add Light", function (scene) {
+    var light = new three__WEBPACK_IMPORTED_MODULE_2__["PointLight"](0xffff00);
+    light.position.set(10, 0, 25);
+    scene.threeScene.add(light);
+  });
+  /*
+    Add first geometry
+   */
+
+  taskList.add("Add Geometry", function (scene) {
+    var geometry = new three__WEBPACK_IMPORTED_MODULE_2__["BoxGeometry"](20, 20, 20);
+    var material = new three__WEBPACK_IMPORTED_MODULE_2__["MeshLambertMaterial"]({
+      color: 0xfd59d7
+    });
+    var cube = new three__WEBPACK_IMPORTED_MODULE_2__["Mesh"](geometry, material);
+    scene.threeScene.add(cube);
   });
 });
 
@@ -47830,14 +47863,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-
 
 var Scene =
 /*#__PURE__*/
@@ -47869,13 +47899,9 @@ function () {
   }
 
   _createClass(Scene, [{
-    key: "initScene",
-    value: function initScene() {
-      this.threeScene = new three__WEBPACK_IMPORTED_MODULE_0__["Scene"]();
-      this.camera = new three__WEBPACK_IMPORTED_MODULE_0__["PerspectiveCamera"](75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      this.renderer = new three__WEBPACK_IMPORTED_MODULE_0__["WebGLRenderer"]();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.container.appendChild(this.renderer.domElement);
+    key: "render",
+    value: function render() {
+      this.renderer.render(this.threeScene, this.camera);
     }
   }]);
 
@@ -47924,10 +47950,10 @@ function () {
 
   _createClass(TaskList, [{
     key: "add",
-    value: function add(fct, title) {
+    value: function add(title, fct) {
       this.list.push(new _task__WEBPACK_IMPORTED_MODULE_0__["default"](fct, this.scene));
       var listElm = document.createElement("div");
-      listElm.innerHTML = "title";
+      listElm.innerHTML = title;
       listElm.classList.add("task");
       listElm.setAttribute("data-iterator", this.list.length - 1);
       this.containerElement.appendChild(listElm);
@@ -47941,7 +47967,6 @@ function () {
          **/
         var task = this.list[this.iterator];
         var taskElm = document.querySelectorAll('.task[data-iterator="' + this.iterator + '"]')[0];
-        console.log(taskElm);
         Array.from(document.getElementsByClassName("task")).forEach(function (elm) {
           elm.classList.remove("active");
         });
@@ -47988,6 +48013,7 @@ function () {
     key: "run",
     value: function run() {
       this.fct(this.scene);
+      this.scene.render();
     }
   }]);
 

@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 class Scene {
   constructor() {
     /**
@@ -27,18 +25,8 @@ class Scene {
       throw "Could not find scene container with class identifier webgl-container";
   }
 
-  initScene() {
-    this.threeScene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.container.appendChild(this.renderer.domElement);
+  render() {
+    this.renderer.render(this.threeScene, this.camera);
   }
 }
 

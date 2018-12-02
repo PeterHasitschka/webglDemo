@@ -6,6 +6,7 @@ class Task {
 
   run() {
     this.fct(this.scene);
+    this.scene.render();
   }
 }
 
