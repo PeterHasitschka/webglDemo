@@ -39,24 +39,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   /*
   *******************
+    Add Geometry
+  *******************
+   */
+  taskList.add("Add Geometry", scene => {
+    let geometry = new THREE.SphereGeometry(5, 32, 32);
+    // let material = new THREE.MeshPhongMaterial({ color: 0x00bbff });
+    let material = new THREE.MeshPhongMaterial({ color: 0x00bbff });
+    let sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere, "sphere");
+  });
+
+  /*
+  *******************
     Add ambient Light
   *******************
   */
   taskList.add("Add ambient light", scene => {
     let light = new THREE.AmbientLight(0x404040);
     scene.add(light, "ambientlight");
-  });
-
-  /*
-  *******************
-    Add Geometry
-  *******************
-   */
-  taskList.add("Add Geometry", scene => {
-    let geometry = new THREE.SphereGeometry(5, 32, 32);
-    let material = new THREE.MeshPhongMaterial({ color: 0x00bbff });
-    let sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere, "sphere");
   });
 
   /*
@@ -77,5 +78,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   */
   taskList.add("Remove ambient light", scene => {
     scene.removeByName("ambientlight");
+  });
+
+  /*
+  *******************
+    Change camera
+  *******************
+  */
+  taskList.add("Change camera distance", scene => {
+    scene.camera.position.z = 40;
   });
 });

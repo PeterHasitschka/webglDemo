@@ -47835,6 +47835,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
   });
   /*
   *******************
+    Add Geometry
+  *******************
+   */
+
+  taskList.add("Add Geometry", function (scene) {
+    var geometry = new three__WEBPACK_IMPORTED_MODULE_2__["SphereGeometry"](5, 32, 32); // let material = new THREE.MeshPhongMaterial({ color: 0x00bbff });
+
+    var material = new three__WEBPACK_IMPORTED_MODULE_2__["MeshPhongMaterial"]({
+      color: 0x00bbff
+    });
+    var sphere = new three__WEBPACK_IMPORTED_MODULE_2__["Mesh"](geometry, material);
+    scene.add(sphere, "sphere");
+  });
+  /*
+  *******************
     Add ambient Light
   *******************
   */
@@ -47842,20 +47857,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   taskList.add("Add ambient light", function (scene) {
     var light = new three__WEBPACK_IMPORTED_MODULE_2__["AmbientLight"](0x404040);
     scene.add(light, "ambientlight");
-  });
-  /*
-  *******************
-    Add Geometry
-  *******************
-   */
-
-  taskList.add("Add Geometry", function (scene) {
-    var geometry = new three__WEBPACK_IMPORTED_MODULE_2__["SphereGeometry"](5, 32, 32);
-    var material = new three__WEBPACK_IMPORTED_MODULE_2__["MeshPhongMaterial"]({
-      color: 0x00bbff
-    });
-    var sphere = new three__WEBPACK_IMPORTED_MODULE_2__["Mesh"](geometry, material);
-    scene.add(sphere, "sphere");
   });
   /*
   *******************
@@ -47876,6 +47877,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   taskList.add("Remove ambient light", function (scene) {
     scene.removeByName("ambientlight");
+  });
+  /*
+  *******************
+    Change camera
+  *******************
+  */
+
+  taskList.add("Change camera distance", function (scene) {
+    scene.camera.position.z = 40;
   });
 });
 
